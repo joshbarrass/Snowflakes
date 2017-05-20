@@ -32,7 +32,7 @@ class App(): #Based on my PygameBase
             for i in range(2,6):
                 snowflake.branch()
             snowflake.complete()
-            snowflake.position = (random.randrange(0,self.size[0]+1),-snowflake.size)
+            snowflake.position = (random.randrange(0,self.size[0]+1),random.randrange(int(-snowflake.size),self.size[1]))
             self.snowflakes.append(snowflake)
 
         self.clock = pygame.time.Clock()
@@ -48,13 +48,17 @@ class App(): #Based on my PygameBase
     def __loop__(self):
         """Commands processed every frame"""
         GRAVITY = 0.75 # affects how fast snowflakes fall
-        WIND_CONSTANT = 0.25 # wind = sin(time)+constant. Affects how much the snowflakes will actually be moved. 0 means they will just oscillate back and forth around a mean position.
+        WIND_CONSTANT = 5.25 # wind = sin(time)+constant. Affects how much the snowflakes will actually be moved. 0 means they will just oscillate back and forth around a mean position.
         wind = math.sin(pygame.time.get_ticks()/1000.)+WIND_CONSTANT
         for snowflake in self.snowflakes:
             #self.snowflake = snowflake
             snowflake.transform(self.get_transform_array(snowflake.rotate*((self.clock.get_time()/1000.)*60)))
             if snowflake.position[1] <= snowflake.size + self.size[1]:
                 snowflake.position = (snowflake.position[0]+(wind/snowflake.weight),snowflake.position[1]+GRAVITY*snowflake.weight*((self.clock.get_time()/1000.)*60))
+                if snowflake.position[0]-snowflake.size > self.size[0]:
+                    snowflake.position = (-snowflake.size,snowflake.position[1])
+                elif snowflake.position[0]+snowflake.size < 0:
+                    snowflake.position = (self.size[0]+snowflake.size,snowflake.position[1])
             else:
                 self.snowflakes.remove(snowflake) #Destroy the snowflake and make a new one
                 snowflake = snowflakes.Snowflake()
