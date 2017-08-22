@@ -17,6 +17,7 @@ class App(): #Based on my PygameBase
     def init(self):
         """Commands to be processed before the application starts"""
         NUM_SNOWFLAKES = 10 #How many snowflakes to make. 1 to 5 should be fine at 100 fps, it starts to slow noticeably from there.
+        self.NUM_BRANCHES = 4 #Changes the size/complexity of snowflakes
         
         pygame.display.set_caption(self.title)
         if self.icon != None:
@@ -29,7 +30,7 @@ class App(): #Based on my PygameBase
         self.snowflakes = []
         for x in range(NUM_SNOWFLAKES): 
             snowflake = snowflakes.Snowflake() #All generated snowflakes are stored here.
-            for i in range(2,6):
+            for i in range(self.NUM_BRANCHES):
                 snowflake.branch()
             snowflake.complete()
             snowflake.position = (random.randrange(0,self.size[0]+1),random.randrange(int(-snowflake.size),self.size[1]))
@@ -62,7 +63,7 @@ class App(): #Based on my PygameBase
             else:
                 self.snowflakes.remove(snowflake) #Destroy the snowflake and make a new one
                 snowflake = snowflakes.Snowflake()
-                for i in range(2,6):
+                for i in range(self.NUM_BRANCHES):
                     snowflake.branch()
                 snowflake.complete()
                 snowflake.position = (random.randrange(0,self.size[0]+1),-snowflake.size)
